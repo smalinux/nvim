@@ -7,6 +7,54 @@ Refer to the [documentation](https://lazyvim.github.io/installation) to get star
 - Default configs: ~/.local/share/nvim/lazy/LazyVim/lua/lazyvim/
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<leader>sc      Open command history
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 # Neovim Plugins for Linux Kernel Development
 
 ## Core Infrastructure
