@@ -251,3 +251,67 @@ vim.api.nvim_create_autocmd("BufWritePre", {
 --     command = 'wincmd =',
 -- })
 --
+
+-- :Rg - Ripgrep and open in Telescope picker
+-- Example:
+--		:Rg xxx | rg yyy | rg zzz
+--		:Rg 'device.*tree'
+vim.api.nvim_create_user_command('Rg', function(opts)
+  local cmd = "rg " .. opts.args .. " | cut -d: -f1 | sort -u"
+  local results = vim.fn.systemlist(cmd)
+
+  if #results > 0 then
+    require('telescope.pickers').new({}, {
+      prompt_title = 'Rg Results (' .. #results .. ' files)',
+      finder = require('telescope.finders').new_table({
+        results = results,
+      }),
+      sorter = require('telescope.config').values.generic_sorter({}),
+      previewer = require('telescope.config').values.file_previewer({}),
+    }):find()
+  else
+    vim.notify('No matches found', vim.log.levels.WARN)
+  end
+end, { nargs = '+' })
+
+-- :Rg - Ripgrep and open all matches directly
+-- Examples
+--		:Rgg xxx | rg yyy | rg zzz
+--		:Rgg 'device.*tree'
+--
+vim.api.nvim_create_user_command('Rgg', function(opts)
+  local cmd = "rg " .. opts.args .. " | cut -d: -f1 | sort -u"
+  local results = vim.fn.systemlist(cmd)
+  if #results > 0 then
+    vim.cmd("args " .. table.concat(results, " "))
+    vim.notify(#results .. " files loaded", vim.log.levels.INFO)
+  else
+    vim.notify("No matches found", vim.log.levels.WARN)
+  end
+end, { nargs = '+' })
+
+-- keybind for :Rg
+vim.keymap.set('n', '<leader>rg', ':Rg ', { desc = 'Rg with prompt' })
+
+
+-- :F - Ripgrep alike :Rg but for files
+vim.api.nvim_create_user_command('F', function(opts)
+  local cmd = "rg --files | rg " .. opts.args
+  local results = vim.fn.systemlist(cmd)
+
+  if #results > 0 then
+    require('telescope.pickers').new({}, {
+      prompt_title = 'Rg Results (' .. #results .. ' files)',
+      finder = require('telescope.finders').new_table({
+        results = results,
+      }),
+      sorter = require('telescope.config').values.generic_sorter({}),
+      previewer = require('telescope.config').values.file_previewer({}),
+    }):find()
+  else
+    vim.notify('No matches found', vim.log.levels.WARN)
+  end
+end, { nargs = '+' })
+
+-- keybind for :F
+vim.keymap.set('n', '<leader>rf', ':F ', { desc = 'rg --files' })

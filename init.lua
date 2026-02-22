@@ -51,8 +51,8 @@ opt.showmode = false
 
 -- History and Search
 -- ============================================================================
--- Keep 500 lines of command history
-opt.history = 500
+-- Keep 1000 lines of command history
+opt.history = 10000
 -- Ignore case in search patterns
 opt.ignorecase = true
 -- Override ignorecase if search contains uppercase letters
@@ -64,6 +64,8 @@ opt.hlsearch = true
 -- ============================================================================
 -- Save undo history to file for persistent undo across sessions
 opt.undofile = true
+opt.undolevels = 10000  -- Maximum number of changes that can be undone
+opt.undoreload = 10000  -- Maximum number lines to save for undo on buffer reload
 -- Directory where undo files are stored
 opt.undodir = vim.fn.expand("~/.vim/undodir")
 -- Don't create backup files
@@ -113,3 +115,8 @@ opt.updatetime = 300
 -- Set default encoding to UTF-8
 opt.encoding = "utf-8"
 
+vim.opt.guicursor = {
+  "n-v-c:block-blinkwait700-blinkoff400-blinkon250",
+  "i-ci-ve:ver25-blinkwait700-blinkoff400-blinkon250",
+  "r-cr:hor20-blinkwait700-blinkoff400-blinkon250",
+}
