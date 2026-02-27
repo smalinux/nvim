@@ -13,8 +13,7 @@ return {
     -- Telescope Picker (insert mode, active while picker is open):
     --   <CR>            Open the selected file, by hitting Enter key.
     --   <C-d>           Delete selected mark; list re-renders immediately
-    --   <C-p>           Move selected mark one position up
-    --   <C-n>           Move selected mark one position down
+    --   <C-p> / <C-n>   Navigate up/down (default Telescope behaviour)
     --   <Esc>           Close the picker
     --
     -- ========================================================================
@@ -69,41 +68,6 @@ return {
                 local current_picker = state.get_current_picker(prompt_bufnr)
                 table.remove(harpoon_files.items, selected_entry.index)
                 current_picker:refresh(make_finder(), { reset_prompt = false })
-              end)
-
-              -- Rebuild finder and jump cursor to new_index after a reorder
-              local function refresh_picker(current_picker, new_index)
-                current_picker:refresh(
-                  make_finder(),
-                  { reset_prompt = false, new_prefix = current_picker:_get_prompt() }
-                )
-                current_picker:set_selection(new_index)
-              end
-
-              -- Move selected mark up in the list and re-render immediately
-              map("i", "<C-p>", function()
-                local state = require("telescope.actions.state")
-                local selected_entry = state.get_selected_entry()
-                local current_picker = state.get_current_picker(prompt_bufnr)
-                local index = selected_entry.index
-                if index > 1 then
-                  harpoon_files.items[index], harpoon_files.items[index - 1] =
-                    harpoon_files.items[index - 1], harpoon_files.items[index]
-                  refresh_picker(current_picker, index - 1)
-                end
-              end)
-
-              -- Move selected mark down in the list and re-render immediately
-              map("i", "<C-n>", function()
-                local state = require("telescope.actions.state")
-                local selected_entry = state.get_selected_entry()
-                local current_picker = state.get_current_picker(prompt_bufnr)
-                local index = selected_entry.index
-                if index < #harpoon_files.items then
-                  harpoon_files.items[index], harpoon_files.items[index + 1] =
-                    harpoon_files.items[index + 1], harpoon_files.items[index]
-                  refresh_picker(current_picker, index + 1)
-                end
               end)
 
               return true
